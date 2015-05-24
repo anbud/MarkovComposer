@@ -1,5 +1,5 @@
 /*
- *  Markov Composer 0.1.1
+ *  Markov Composer 0.1.9
  * 
  *  Copyright (C) 2015 - Andrej Budinčević
  *
@@ -14,33 +14,43 @@
  *  GNU General Public License for more details.
 
  *  You should have received a copy of the GNU General Public License
- *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ *  along with this program. If not, see <http://www.gnu.org/licenses/>.
  *
  */
 
 package rs.zx.ml;
 
 public class Score {
-	private static double scoreMatrix[][] = new double[128*128][128];
+	private static Data scoreMatrix[][] = new Data[128*128][128];
 
-	public static int nextNote(int n1, int n2) {
+	public static Note nextNote(int n1, int n2) {
 		double rnd = Math.random();
 		double sum = 0.0;
+		
+		int ind = n1*127+n2;
 
 		for(int i = 0; i < 128; i++) {
-			sum += scoreMatrix[n1*127+n2][i];
+			if(scoreMatrix[ind][i] != null)
+				sum += scoreMatrix[ind][i].getChance();
 
 			if(sum >= rnd)
-				return i;
+				return new Note(i, scoreMatrix[ind][i].getVelocity(), scoreMatrix[ind][i].getPause());
 		}
 
-		return (int) (rnd*127);	
+		int t = (int) (rnd*127);
+		if(scoreMatrix[ind][t] != null)
+			return new Note(t, scoreMatrix[ind][t].getVelocity(), scoreMatrix[ind][t].getPause());	
+		else
+			return new Note(t, Info.NOTE_VELOCITY, Info.NOTE_PAUSE);
 	}
 
 	public static int sumAll(int pos) {
 		int sum = 0;
 
-		for(int i = 0; i < 128; sum+=scoreMatrix[pos][i++]);
+		for(int i = 0; i < 128; i++) {
+			if(scoreMatrix[pos][i] != null) 				
+				sum+=scoreMatrix[pos][i++].getChance();
+		}
 
 		return sum;
 	}
@@ -49,12 +59,25 @@ public class Score {
 		for(int i = 0; i < 128*128; i++) {
 			int sum = sumAll(i);
 			if(sum != 0)
-				for(int j = 0; j < 128; j++) 
-					scoreMatrix[i][j] /= sum;					
+				for(int j = 0; j < 128; j++) {
+					if(scoreMatrix[i][j] != null) {
+						scoreMatrix[i][j].meanPause();
+						
+						scoreMatrix[i][j].setChance(scoreMatrix[i][j].getChance()/sum);		
+					}
+				}
 		}
 	}
 
-	public static void updateWeight(int n1, int n2, int n3) {
-		scoreMatrix[n1*127+n2][n3]++;
+	public static void updateWeight(int n1, int n2, Note n3) {
+		int ind = n1*127+n2;
+		
+		if(scoreMatrix[ind][n3.getNoteId()] != null) {
+			scoreMatrix[ind][n3.getNoteId()].incChance();
+			
+			scoreMatrix[ind][n3.getNoteId()].updateVelocity(n3.getVelocity());
+			scoreMatrix[ind][n3.getNoteId()].addPause(n3.getPause());
+		} else
+			scoreMatrix[ind][n3.getNoteId()] = new Data(1.0, n3.getVelocity(), n3.getPause());
 	}
 }

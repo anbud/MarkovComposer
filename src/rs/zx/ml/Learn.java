@@ -1,5 +1,5 @@
 /*
- *  Markov Composer 0.1.1
+ *  Markov Composer 0.1.9
  * 
  *  Copyright (C) 2015 - Andrej Budinčević
  *
@@ -41,10 +41,13 @@ public class Learn {
 
 	public Learn(String midiName) {
 		try {
+			long oldTick = 0;
+			
 			Sequence sequence = MidiSystem.getSequence(new File(midiName));
+			int tick = 60000/(120*sequence.getResolution());
 
 			int id[] = {0, 0, 0};
-			int nArr[][] = new int[2][2];
+			Note nArr[][] = new Note[2][2];
 
 			for(Track track : sequence.getTracks()) {
 				for(int i = 0; i < track.size(); i++) { 				
@@ -55,16 +58,25 @@ public class Learn {
 
 						if(sm.getCommand() == NOTE_ON) {
 							int key = sm.getData1();
+							int velocity = sm.getData2();
+							int pause = (int) Math.abs(event.getTick()*tick-oldTick);
+
+							oldTick = event.getTick()*tick;
+							
+							if(pause == 0)
+								pause = Info.NOTE_PAUSE;
 
 							for(int j = 0; j < 2; j++) {
 								if(id[j] == 2) {
 									id[j] = 0;
-									Score.updateWeight(nArr[j][0], nArr[j][1], key);
+									Score.updateWeight(nArr[j][0].getNoteId(), nArr[j][1].getNoteId(), new Note(key, (nArr[j][0].getVelocity()+nArr[j][1].getVelocity())/2, (nArr[j][0].getPause()+nArr[j][1].getPause())/2));
 								} else {
-									nArr[j][id[j]++] = key;
+									nArr[j][id[j]++] = new Note(key, velocity, pause);
 								}
 							}
 						}
+						
+						
 					}
 				}
 			}

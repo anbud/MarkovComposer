@@ -1,5 +1,5 @@
 /*
- *  Markov Composer 0.1.1
+ *  Markov Composer 0.1.9
  * 
  *  Copyright (C) 2015 - Andrej Budinčević
  *
@@ -55,7 +55,9 @@ public class Player extends Thread {
 			sn = n2;
 
 			while (!this.isInterrupted()) {
-				nn = Score.nextNote(fn, sn);
+				Note n = Score.nextNote(fn, sn);
+				
+				nn = n.getNoteId();
 
 				int octave = (nn/12)-1;
 				String noteName = NOTE_NAMES[nn%12];
@@ -64,13 +66,13 @@ public class Player extends Thread {
 				oct.setText("Octave: " + octave);
 				prev.insert(noteName + octave + "\n", 0);
 
-				channels[0].noteOn(nn, Info.NOTE_VELOCITY);
-				Thread.sleep(Info.NOTE_PAUSE);
+				channels[0].noteOn(nn, n.getVelocity());
+				Thread.sleep(n.getPause());
 				channels[0].noteOff(nn);
 
 				fn = sn;
 				sn = nn;
 			}
-		} catch(Exception e) {}
+		} catch(Exception e) { }
 	}
 }

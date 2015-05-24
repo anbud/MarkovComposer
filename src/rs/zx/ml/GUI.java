@@ -1,5 +1,5 @@
 /*
- *  Markov Composer 0.1.1
+ *  Markov Composer 0.1.9
  * 
  *  Copyright (C) 2015 - Andrej Budinčević
  *

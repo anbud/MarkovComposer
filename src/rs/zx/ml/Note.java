@@ -20,14 +20,37 @@
 
 package rs.zx.ml;
 
-import javax.swing.UIManager;
+public class Note {
+	private int noteId;
+	private int velocity, pause;
+	
+	public Note(int noteId, int velocity, int pause) {
+		this.noteId = noteId;
+		this.velocity = velocity;
+		this.pause = pause;
+	}
 
-public class MLMain {
-	public static void main(String[] args) {
-		try {
-			UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
-		} catch(Exception e) {}
+	public int getNoteId() {
+		return noteId;
+	}
 
-		new GUI();
+	public void setNoteId(int noteId) {
+		this.noteId = noteId;
+	}
+
+	public int getVelocity() {
+		return velocity;
+	}
+
+	public void setVelocity(int velocity) {
+		this.velocity = velocity;
+	}
+
+	public int getPause() {
+		return pause;
+	}
+
+	public void setPause(int pause) {
+		this.pause = pause;
 	}
 }
