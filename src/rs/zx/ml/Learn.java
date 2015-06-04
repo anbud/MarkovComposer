@@ -1,5 +1,5 @@
 /*
- *  Markov Composer 0.1.9
+ *  Markov Composer 0.2.4
  * 
  *  Copyright (C) 2015 - Andrej Budinčević
  *
@@ -14,7 +14,7 @@
  *  GNU General Public License for more details.
 
  *  You should have received a copy of the GNU General Public License
- *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ *  along with this program. If not, see <http://www.gnu.org/licenses/>.
  *
  */
 
@@ -47,7 +47,7 @@ public class Learn {
 			int tick = 60000/(120*sequence.getResolution());
 
 			int id[] = {0, 0, 0};
-			Note nArr[][] = new Note[2][2];
+			Edge nArr[][] = new Edge[2][2];
 
 			for(Track track : sequence.getTracks()) {
 				for(int i = 0; i < track.size(); i++) { 				
@@ -69,14 +69,12 @@ public class Learn {
 							for(int j = 0; j < 2; j++) {
 								if(id[j] == 2) {
 									id[j] = 0;
-									Score.updateWeight(nArr[j][0].getNoteId(), nArr[j][1].getNoteId(), new Note(key, (nArr[j][0].getVelocity()+nArr[j][1].getVelocity())/2, (nArr[j][0].getPause()+nArr[j][1].getPause())/2));
+									Chain.updateWeight(nArr[j][0].getDest()*127+nArr[j][1].getDest(), new Edge(1.0, (nArr[j][0].getVelocity()+nArr[j][1].getVelocity())/2, (nArr[j][0].getPause()+nArr[j][1].getPause())/2, key));
 								} else {
-									nArr[j][id[j]++] = new Note(key, velocity, pause);
+									nArr[j][id[j]++] = new Edge(1.0, velocity, pause, key);
 								}
 							}
-						}
-						
-						
+						}						
 					}
 				}
 			}

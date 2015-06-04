@@ -1,5 +1,5 @@
 /*
- *  Markov Composer 0.1.9
+ *  Markov Composer 0.2.4
  * 
  *  Copyright (C) 2015 - Andrej Budinčević
  *
@@ -14,46 +14,44 @@
  *  GNU General Public License for more details.
 
  *  You should have received a copy of the GNU General Public License
- *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ *  along with this program. If not, see <http://www.gnu.org/licenses/>.
  *
  */
 
 package rs.zx.ml;
 
-public class Data {
+public class Edge {
 	private double chance;
 	private int pause;
 	
-	private int velocity;
+	private int velocity;	
+	private int dest;
 
-	public Data(double chance, int pause, int velocity) {
+	public Edge(double chance, int pause, int velocity, int dest) {
 		this.chance = chance;
 		this.pause = pause;
 		this.velocity = velocity;
+		this.dest = dest;
 	}
 
 	public double getChance() {
 		return chance;
 	}
-
-	public void setChance(double chance) {
-		this.chance = chance;
+	
+	public int getDest() {
+		return dest;
+	}
+	
+	public void normalizeChance(int sum) {
+		chance /= sum;
 	}
 
 	public int getPause() {
 		return pause;
 	}
 
-	public void setPause(int pause) {
-		this.pause = pause;
-	}
-
 	public int getVelocity() {
 		return velocity;
-	}
-
-	public void setVelocity(int velocity) {
-		this.velocity = velocity;
 	}
 	
 	public void incChance() {

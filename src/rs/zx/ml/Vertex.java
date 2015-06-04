@@ -1,5 +1,5 @@
 /*
- *  Markov Composer 0.1.9
+ *  Markov Composer 0.2.4
  * 
  *  Copyright (C) 2015 - Andrej Budinčević
  *
@@ -14,43 +14,29 @@
  *  GNU General Public License for more details.
 
  *  You should have received a copy of the GNU General Public License
- *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ *  along with this program. If not, see <http://www.gnu.org/licenses/>.
  *
  */
 
 package rs.zx.ml;
 
-public class Note {
-	private int noteId;
-	private int velocity, pause;
+import java.util.HashMap;
+
+public class Vertex {
+	public HashMap<Integer, Edge> edges;
+	public int key;
 	
-	public Note(int noteId, int velocity, int pause) {
-		this.noteId = noteId;
-		this.velocity = velocity;
-		this.pause = pause;
+	public Vertex(int key) {
+		this.key = key;
+		
+		edges = new HashMap<Integer, Edge>();
 	}
-
-	public int getNoteId() {
-		return noteId;
+	
+	public HashMap<Integer, Edge> getEdges() {
+		return edges;
 	}
-
-	public void setNoteId(int noteId) {
-		this.noteId = noteId;
-	}
-
-	public int getVelocity() {
-		return velocity;
-	}
-
-	public void setVelocity(int velocity) {
-		this.velocity = velocity;
-	}
-
-	public int getPause() {
-		return pause;
-	}
-
-	public void setPause(int pause) {
-		this.pause = pause;
+	
+	public int getKey() {
+		return key;
 	}
 }

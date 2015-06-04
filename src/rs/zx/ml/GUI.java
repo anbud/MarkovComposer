@@ -1,5 +1,5 @@
 /*
- *  Markov Composer 0.1.9
+ *  Markov Composer 0.2.4
  * 
  *  Copyright (C) 2015 - Andrej Budinčević
  *
@@ -14,7 +14,7 @@
  *  GNU General Public License for more details.
 
  *  You should have received a copy of the GNU General Public License
- *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ *  along with this program. If not, see <http://www.gnu.org/licenses/>.
  *
  */
 
@@ -28,8 +28,10 @@ import java.io.IOException;
 import java.util.Random;
 
 import javax.swing.JButton;
+import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
@@ -183,18 +185,44 @@ public class GUI extends JFrame {
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
 		setVisible(true);
+        
+	    JFileChooser dir = new JFileChooser(); 
+	    dir.setCurrentDirectory(new java.io.File("."));
+	    dir.setDialogTitle(Info.NAME + " - Directory chooser");
+	    dir.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
 
-		File f = new File("./beet/");
-		File[] files = f.listFiles();		    
+	    dir.setAcceptAllFileFilterUsed(false);
+	    
+	    File learningDir = null;
+	    
+	    if(dir.showOpenDialog(this) == JFileChooser.APPROVE_OPTION) 
+	      learningDir = dir.getSelectedFile();
+	    else { 
+	    	JOptionPane.showMessageDialog(this, "You need to choose a learning directory!", "Learning error!", JOptionPane.ERROR_MESSAGE);
+	    	dispose();
+	    }
+	    
+	    int cnt = 0;
+	    
+		File[] files = learningDir.listFiles();		    
 		for (File file : files) {
+			cnt = 0;
 			if (!file.isDirectory()) {
 				try {
-					new Learn(file.getCanonicalPath());
+					if(file.getName().substring(file.getName().lastIndexOf(".")+1).equals("mid")) {
+						new Learn(file.getCanonicalPath());
+						cnt++;
+					}
 				} catch (IOException e1) {}
 			}
 		}
+		
+		if(cnt == 0) {
+			JOptionPane.showMessageDialog(this, "No midi files found in the learning directory!", "Learning error!", JOptionPane.ERROR_MESSAGE);
+	    	dispose();
+		}
 
-		Score.normalizeMatrix();
+		Chain.normalizeChain();
 
 		imp.setText("Learned compositions: " + Learn.getCount());
 		play.setEnabled(true);

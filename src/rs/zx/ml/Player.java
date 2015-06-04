@@ -1,5 +1,5 @@
 /*
- *  Markov Composer 0.1.9
+ *  Markov Composer 0.2.4
  * 
  *  Copyright (C) 2015 - Andrej Budinčević
  *
@@ -14,7 +14,7 @@
  *  GNU General Public License for more details.
 
  *  You should have received a copy of the GNU General Public License
- *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ *  along with this program. If not, see <http://www.gnu.org/licenses/>.
  *
  */
 
@@ -55,9 +55,9 @@ public class Player extends Thread {
 			sn = n2;
 
 			while (!this.isInterrupted()) {
-				Note n = Score.nextNote(fn, sn);
+				Edge n = Chain.nextEdge(fn*127+sn);
 				
-				nn = n.getNoteId();
+				nn = n.getDest();
 
 				int octave = (nn/12)-1;
 				String noteName = NOTE_NAMES[nn%12];
@@ -73,6 +73,8 @@ public class Player extends Thread {
 				fn = sn;
 				sn = nn;
 			}
-		} catch(Exception e) { }
+		} catch(Exception e) { 
+			e.printStackTrace();
+		}
 	}
 }

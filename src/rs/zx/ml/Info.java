@@ -1,5 +1,5 @@
 /*
- *  Markov Composer 0.1.9
+ *  Markov Composer 0.2.4
  * 
  *  Copyright (C) 2015 - Andrej Budinčević
  *
@@ -14,7 +14,7 @@
  *  GNU General Public License for more details.
 
  *  You should have received a copy of the GNU General Public License
- *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ *  along with this program. If not, see <http://www.gnu.org/licenses/>.
  *
  */
 
@@ -22,7 +22,7 @@ package rs.zx.ml;
 
 public interface Info {
 	String NAME = "Markov Composer";
-	String VERSION = "0.1.9";
+	String VERSION = "0.2.4";
 	int NOTE_PAUSE = 300;
 	int NOTE_VELOCITY = 127;
 }
